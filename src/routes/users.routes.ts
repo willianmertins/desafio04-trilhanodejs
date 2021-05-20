@@ -7,20 +7,42 @@ import { turnUserAdminController } from "../modules/users/useCases/turnUserAdmin
 
 const usersRoutes = Router();
 
-usersRoutes.post("/", (request, response) =>
-  createUserController.handle(request, response)
-);
+usersRoutes.post("/", (request, response) => {
+  try {
+    createUserController.handle(request, response);
+  } catch (user) {
+    return response.status(400).json({ error: "Não possível criar usuário" });
+  }
+});
 
-usersRoutes.patch("/:user_id/admin", (request, response) =>
-  turnUserAdminController.handle(request, response)
-);
+usersRoutes.patch("/:user_id/admin", (request, response) => {
+  try {
+    turnUserAdminController.handle(request, response);
+  } catch (user) {
+    return response
+      .status(404)
+      .json({ error: "Não foi possível tornar usuário administrador" });
+  }
+});
 
-usersRoutes.get("/:user_id", (request, response) =>
-  showUserProfileController.handle(request, response)
-);
+usersRoutes.get("/:user_id", (request, response) => {
+  try {
+    showUserProfileController.handle(request, response);
+  } catch (user) {
+    return response
+      .status(404)
+      .json({ error: "Não foi possível encontrar usuário" });
+  }
+});
 
-usersRoutes.get("/", (request, response) =>
-  listAllUsersController.handle(request, response)
-);
+usersRoutes.get("/", (request, response) => {
+  try {
+    listAllUsersController.handle(request, response);
+  } catch (user) {
+    return response
+      .status(400)
+      .json({ error: "Não possível listar os usuários" });
+  }
+});
 
 export { usersRoutes };
